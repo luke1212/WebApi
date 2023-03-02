@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Models;
 
 namespace WebApi.Controllers;
 
@@ -6,9 +7,16 @@ namespace WebApi.Controllers;
 [Route("api/[controller]")]
 public class ProductController : ControllerBase
 {
-    [HttpGet]
-    public string Get()
+    private readonly ShopContext _context;
+    public ProductController(ShopContext context)
     {
-        return "Hello from ProductController";
+        _context = context;
+        _context.Database.EnsureCreated();
+    }
+
+    [HttpGet]
+    public IEnumerable<Product> GetAllProduct()
+    {
+        return _context.Products.ToArray();
     }
 }

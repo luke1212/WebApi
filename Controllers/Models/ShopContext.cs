@@ -9,10 +9,10 @@ public class ShopContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Product>()
-            .HasOne(p => p.Category)
-            .WithMany(c => c.Products)
-            .HasForeignKey(p => p.CategoryId);
+        modelBuilder.Entity<Category>()
+          .HasMany(c => c.Products)
+          .WithOne(a => a.Category)
+          .HasForeignKey(a => a.CategoryId);
 
         modelBuilder.Seed();
     }
