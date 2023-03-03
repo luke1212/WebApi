@@ -32,5 +32,12 @@ public class ProductController : ControllerBase
         return Ok(product);
     }
 
+    [HttpPost]
+    public async Task<ActionResult> PostProduct(Product product)
+    {
+        _context.Products.Add(product);
+        await _context.SaveChangesAsync();
+        return CreatedAtAction(nameof(getProduct), new { id = product.Id }, product);
+    }
 
 }
