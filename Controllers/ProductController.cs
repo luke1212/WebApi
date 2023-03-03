@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebApi.Models;
 
 namespace WebApi.Controllers;
@@ -15,8 +16,21 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<Product> GetAllProduct()
+    public async Task<IEnumerable<Product>> GetAllProduct()
     {
-        return _context.Products.ToArray();
+        return await _context.Products.ToArrayAsync();
     }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult> getProduct(int id)
+    {
+        var product = await _context.Products.FindAsync(id);
+        if (product == null)
+        {
+            return NotFound();
+        }
+        return Ok(product);
+    }
+
+
 }
