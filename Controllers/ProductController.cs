@@ -45,6 +45,14 @@ public class ProductController : ControllerBase
                 products = products.OrderByCustom(queryParameters.SortBy, queryParameters.SortOrder);
             }
         }
+
+        if (!string.IsNullOrEmpty(queryParameters.SearchTerm))
+        {
+            products = products.Where(p =>
+                p.Name.ToLower().Contains(queryParameters.SearchTerm.ToLower())
+             || p.Sku.ToLower().Contains(queryParameters.SearchTerm.ToLower()));
+        }
+
         products = products.Skip((queryParameters.PageNumber - 1) * queryParameters.PageSize)
             .Take(queryParameters.PageSize);
         return await products.ToArrayAsync();
