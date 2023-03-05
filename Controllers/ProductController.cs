@@ -16,9 +16,35 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IEnumerable<Product>> GetAllProduct([FromQuery] QueryParameters queryParameters)
+    public async Task<IEnumerable<Product>> GetAllProduct([FromQuery] ProductQueryParameters queryParameters)
     {
         IQueryable<Product> products = _context.Products;
+
+        if (!string.IsNullOrEmpty(queryParameters.ProductName))
+        {
+            products = products.Where(p => p.Name.Contains(queryParameters.ProductName));
+        }
+
+        if (!string.IsNullOrEmpty(queryParameters.sku))
+        {
+            products = products.Where(p => p.Sku.ToLower().Contains(queryParameters.sku.ToLower()));
+        }
+
+        if (queryParameters.MinPrice != null)
+        {
+            products = products.Where(p => p.Price >= queryParameters.MinPrice);
+        }
+        if (queryParameters.MaxPrice != null)
+        {
+            products = products.Where(p => p.Price <= queryParameters.MaxPrice);
+        }
+        if (!string.IsNullOrEmpty(queryParameters.SortBy))
+        {
+            if (typeof(Product).GetProperty(queryParameters.SortBy) != null)
+            {
+                products = products.OrderByCustom(queryParameters.SortBy, queryParameters.SortOrder);
+            }
+        }
         products = products.Skip((queryParameters.PageNumber - 1) * queryParameters.PageSize)
             .Take(queryParameters.PageSize);
         return await products.ToArrayAsync();
