@@ -16,9 +16,12 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IEnumerable<Product>> GetAllProduct()
+    public async Task<IEnumerable<Product>> GetAllProduct([FromQuery] QueryParameters queryParameters)
     {
-        return await _context.Products.ToArrayAsync();
+        IQueryable<Product> products = _context.Products;
+        products = products.Skip((queryParameters.PageNumber - 1) * queryParameters.PageSize)
+            .Take(queryParameters.PageSize);
+        return await products.ToArrayAsync();
     }
 
     [HttpGet("{id}")]
