@@ -7,7 +7,8 @@ namespace WebApi.Controllers;
 [ApiVersion("1.0")]
 [ApiController]
 // [Route("api/[controller]")]
-[Route("api/v{version:apiVersion}/products")]
+// [Route("api/v{version:apiVersion}/products")]
+[Route("products")]
 public class ProductV1Controller : ControllerBase
 {
     private readonly ShopContext _context;
@@ -139,7 +140,8 @@ public class ProductV1Controller : ControllerBase
 }
 
 [ApiVersion("2.0")]
-[Route("api/v{version:apiVersion}/products")]
+// [Route("api/v{version:apiVersion}/products")]
+[Route("products")]
 [ApiController]
 public class ProductV2Controller : ControllerBase
 {
